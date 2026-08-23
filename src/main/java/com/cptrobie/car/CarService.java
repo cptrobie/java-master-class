@@ -102,7 +102,7 @@ public class CarService {
     var brandCount = 0;
 
     for (Car car : allCars) {
-      if (car.getBrand() == brand) {
+      if (car.getBrand().equals(brand)) {
         brandCount++;
       }
     }
@@ -115,7 +115,7 @@ public class CarService {
     var i = 0;
 
     for (Car car : allCars) {
-      if (car.getBrand() == brand) {
+      if (car.getBrand().equals(brand)) {
         carsByBrand[i++] = car;
       }
     }
