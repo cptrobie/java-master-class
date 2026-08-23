@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public class Main {
 
-  public static void main() {
+  static void main(String[] args) {
 
     var userService = new UserService();
     var carBookingService = new CarBookingService();
@@ -97,13 +97,13 @@ public class Main {
         Car bookedCar = null;
         CarBooking[] userBookings = carBookingService.getBookingsByUser(userId);
         for (CarBooking userBooking : userBookings) {
-          if (userBooking.getId() == bookingId) {
+          if (userBooking.getId().equals(bookingId)) {
             bookedCar = userBooking.getCar();
           }
         }
         System.out.println("This is to confirm the following booking details:");
         System.out.println("   BookingId: " + bookingId);
-        System.out.println("   User: " + user.getName());
+        System.out.println("   User: " + user.name());
         System.out.println("   Car: " + bookedCar + "\n");
       } else {
         System.out.println("User " + userId + " was not found. \n");
@@ -159,7 +159,7 @@ public class Main {
         System.out.println("\nUser " + userId + " has no bookings. \n");
         return;
       }
-      System.out.println("\nUser: " + user.getName() + " has booked the following cars:");
+      System.out.println("\nUser: " + user.name() + " has booked the following cars:");
       for (var booking : userBookings) {
         System.out.println("   " + booking);
       }

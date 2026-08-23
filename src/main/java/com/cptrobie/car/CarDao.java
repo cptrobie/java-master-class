@@ -58,7 +58,7 @@ public class CarDao {
               Brand.TOYOTA,
               false)
         };
-    }
+  }
 
   public Car[] getAllCars() {
     return CARS;
@@ -68,7 +68,7 @@ public class CarDao {
     var electricCarCount = 0;
 
     for (Car car : CARS) {
-      if (car.isElectric()) {
+      if (car.getIsElectric()) {
         electricCarCount++;
       }
     }
@@ -81,7 +81,7 @@ public class CarDao {
     var i = 0;
 
     for (Car car : CARS) {
-      if (car.isElectric()) {
+      if (car.getIsElectric()) {
         electricCars[i++] = car;
       }
     }

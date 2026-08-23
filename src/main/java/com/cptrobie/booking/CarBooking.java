@@ -92,4 +92,9 @@ public class CarBooking {
         && Objects.equals(price, that.price)
         && status == that.status;
   }
+
+  @Override
+  public int hashCode() {
+    return super.hashCode();
+  }
 }

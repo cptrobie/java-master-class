@@ -19,6 +19,7 @@ public class UserService {
         return user;
       }
     }
-    return null;
+    // If we get here then the user was not found
+    throw new UserNotFoundException("User with Id of " + userId + " was not found");
   }
 }

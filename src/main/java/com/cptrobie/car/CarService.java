@@ -1,8 +1,6 @@
 package com.cptrobie.car;
 
 import com.cptrobie.booking.CarBooking;
-
-import javax.management.InstanceNotFoundException;
 import java.util.UUID;
 
 public class CarService {
@@ -21,10 +19,6 @@ public class CarService {
       return allCars;
     }
 
-    if (allCars.length == allBookings.length) {
-      return new Car[0];
-    }
-
     var bookingIndex = 0;
     for (CarBooking carBooking : allBookings) {
       if (carBooking != null) {
@@ -38,7 +32,7 @@ public class CarService {
 
     for (Car bookedCar : bookedCars) {
       for (int j = 0; j < allCars.length; j++) {
-        if (!matchedCars[j] && allCars[j] == bookedCar) {
+        if (!matchedCars[j] && allCars[j].getId().equals(bookedCar.getId())) {
           matchedCars[j] = true;
           matchedCarCount++;
           break;
@@ -70,10 +64,6 @@ public class CarService {
       return allElectricCars;
     }
 
-    if (allElectricCars.length == electricCarBookings.length) {
-      return new Car[0];
-    }
-
     var bookingIndex = 0;
     for (CarBooking carBooking : electricCarBookings) {
       if (carBooking != null) {
@@ -81,13 +71,13 @@ public class CarService {
       }
     }
 
-// Create a tracking array to avoid deleting the same index twice
+    // Create a tracking array to avoid deleting the same index twice
     boolean[] matchedCars = new boolean[allElectricCars.length];
     var matchedCarCount = 0;
 
     for (Car bookedCar : bookedCars) {
       for (int j = 0; j < allElectricCars.length; j++) {
-        if (!matchedCars[j] && allElectricCars[j] == bookedCar) {
+        if (!matchedCars[j] && allElectricCars[j].getId().equals(bookedCar.getId())) {
           matchedCars[j] = true;
           matchedCarCount++;
           break;
@@ -107,7 +97,7 @@ public class CarService {
     return availableElectricCars;
   }
 
-  public Car[] getCarsByBrand(Brand brand) throws InstanceNotFoundException {
+  public Car[] getCarsByBrand(Brand brand) {
     Car[] allCars = carDao.getAllCars();
     var brandCount = 0;
 
@@ -118,7 +108,7 @@ public class CarService {
     }
 
     if (brandCount == 0) {
-      throw new InstanceNotFoundException("No " + brand  + " brand of cars were found.");
+      throw new CarNotFoundException("No " + brand + " brand of cars were found.");
     }
 
     Car[] carsByBrand = new Car[brandCount];
@@ -133,15 +123,15 @@ public class CarService {
     return carsByBrand;
   }
 
-  public Car getCarById(String carId) throws InstanceNotFoundException {
+  public Car getCarById(String carId) {
     Car[] allCars = carDao.getAllCars();
 
     for (Car car : allCars) {
-      if (car.id().equals(UUID.fromString(carId))) {
+      if (car.getId().equals(UUID.fromString(carId))) {
         return car;
       }
     }
     // If we get here then the car was not found
-    throw new InstanceNotFoundException("Car with Id of " + carId + " was not found");
+    throw new CarNotFoundException("Car with Id of " + carId + " was not found");
   }
 }

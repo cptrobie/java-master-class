@@ -4,8 +4,21 @@ import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.UUID;
 
-public record Car(
-    UUID id, String regNumber, BigDecimal rentalPricePerDay, Brand brand, boolean isElectric) {
+public class Car {
+
+  private final UUID id;
+  private final String regNumber;
+  private final BigDecimal rentalPricePerDay;
+  private final Brand brand;
+  private final boolean isElectric;
+
+  Car(UUID id, String regNumber, BigDecimal rentalPricePerDay, Brand brand, boolean isElectric) {
+    this.id = id;
+    this.regNumber = regNumber;
+    this.rentalPricePerDay = rentalPricePerDay;
+    this.brand = brand;
+    this.isElectric = isElectric;
+  }
 
   public UUID getId() {
     return id;
