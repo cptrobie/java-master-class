@@ -2,12 +2,14 @@ package com.cptrobie.booking;
 
 import com.cptrobie.car.Car;
 import com.cptrobie.user.User;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
-public class CarBooking {
+public class CarBooking implements Serializable {
+
   private final UUID id;
   private final User user;
   private final Car car;
@@ -23,14 +25,19 @@ public class CarBooking {
       LocalDate endDate,
       BigDecimal price,
       BookingStatus status) {
+    this(UUID.randomUUID(), user, car, startDate, endDate, price, status);
+  }
+
+  public CarBooking(UUID id, User user, Car car, LocalDate startDate, LocalDate endDate, BigDecimal price, BookingStatus status) {
+    this.id = id;
     this.user = user;
     this.car = car;
     this.startDate = startDate;
     this.endDate = endDate;
     this.price = price;
     this.status = status;
-    this.id = UUID.randomUUID();
   }
+
 
   public UUID getId() {
     return id;
@@ -58,6 +65,22 @@ public class CarBooking {
 
   public BookingStatus getStatus() {
     return status;
+  }
+
+  public String serializeCarBooking() {
+    return id
+        + ", "
+        + user.serializeUser()
+        + ", "
+        + car.serializeCar()
+        + ", "
+        + startDate
+        + ", "
+        + endDate
+        + ", "
+        + price
+        + ", "
+        + status;
   }
 
   @Override

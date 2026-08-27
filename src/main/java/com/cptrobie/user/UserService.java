@@ -1,25 +1,20 @@
 package com.cptrobie.user;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public class UserService {
   private final UserDao userDao;
 
-  public UserService() {
-    this.userDao = new UserDao();
+  public UserService(UserDao userDao) {
+    this.userDao = userDao;
   }
 
   public User[] getAllUsers() {
     return userDao.getUsers();
   }
 
-  public User getUserById(UUID userId) {
-    for (User user : getAllUsers()) {
-      if (user.id().equals(userId)) {
-        return user;
-      }
-    }
-    // If we get here then the user was not found
-    throw new UserNotFoundException("User with Id of " + userId + " was not found");
+  public Optional<User> getUserById(UUID userId) {
+    return userDao.findUserById(userId);
   }
 }

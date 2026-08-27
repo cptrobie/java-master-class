@@ -1,11 +1,16 @@
 package com.cptrobie.car;
 
 import com.cptrobie.booking.CarBooking;
+import java.util.Optional;
 import java.util.UUID;
 
 public class CarService {
 
-  private final CarDao carDao = new CarDao();
+  private final CarDao carDao;
+
+  public CarService(CarDao carDao) {
+    this.carDao = carDao;
+  }
 
   public Car[] getAvailableCars(CarBooking[] allBookings) {
 
@@ -97,41 +102,11 @@ public class CarService {
     return availableElectricCars;
   }
 
-  public Car[] getCarsByBrand(Brand brand) {
-    Car[] allCars = carDao.getAllCars();
-    var brandCount = 0;
-
-    for (Car car : allCars) {
-      if (car.getBrand().equals(brand)) {
-        brandCount++;
-      }
-    }
-
-    if (brandCount == 0) {
-      throw new CarNotFoundException("No " + brand + " brand of cars were found.");
-    }
-
-    Car[] carsByBrand = new Car[brandCount];
-    var i = 0;
-
-    for (Car car : allCars) {
-      if (car.getBrand().equals(brand)) {
-        carsByBrand[i++] = car;
-      }
-    }
-
-    return carsByBrand;
+  public Optional<Car[]> getCarsByBrand(Brand brand) {
+    return carDao.findCarsByBrand(brand);
   }
 
-  public Car getCarById(String carId) {
-    Car[] allCars = carDao.getAllCars();
-
-    for (Car car : allCars) {
-      if (car.getId().equals(UUID.fromString(carId))) {
-        return car;
-      }
-    }
-    // If we get here then the car was not found
-    throw new CarNotFoundException("Car with Id of " + carId + " was not found");
+  public Optional<Car> getCarById(UUID carId) {
+    return carDao.findCarById(carId);
   }
 }

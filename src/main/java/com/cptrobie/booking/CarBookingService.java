@@ -3,18 +3,28 @@ package com.cptrobie.booking;
 import com.cptrobie.car.Car;
 import com.cptrobie.car.CarService;
 import com.cptrobie.user.User;
+import com.cptrobie.user.UserService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.UUID;
 
 public class CarBookingService {
 
-  private final CarBookingDao carBookingDao = new CarBookingDao();
-  private final CarService carService = new CarService();
+  private final CarBookingDao carBookingDao;
+  private final CarService carService;
+  private final UserService userService;
 
-  public UUID bookCar(User user, String carId, Integer bookingLength) {
+  public CarBookingService(
+      CarBookingDao carBookingDao, CarService carService, UserService userService) {
+    this.carBookingDao = carBookingDao;
+    this.carService = carService;
+    this.userService = userService;
+  }
+
+  public UUID bookCar(String userId, String carId, Integer bookingLength) {
     // Check to see if any cars are available to book
-    Car[] availableCars = getAllAvailableCars();
+    Car[] availableCars = carService.getAvailableCars(getAllBookings());
     if (availableCars.length == 0) {
       throw new BookingStateException("All cars are booked");
     }
@@ -31,15 +41,14 @@ public class CarBookingService {
     }
 
     // Car can now be booked
-    Car car = carService.getCarById(carId);
-    var carBooking = createCarBooking(user, car, bookingLength);
-    carBookingDao.bookCar(carBooking);
+    var carBooking = createCarBooking(userId, carId, bookingLength);
+    carBookingDao.saveBooking(carBooking);
     return carBooking.getId();
   }
 
   public void deleteCarBooking(String bookingId) {
 
-    CarBooking[] allBookings = carBookingDao.getCarBookings();
+    CarBooking[] allBookings = carBookingDao.getBookings();
 
     if (allBookings.length == 0) {
       throw new BookingNotFoundException("Booking not found");
@@ -59,19 +68,23 @@ public class CarBookingService {
 
     for (CarBooking carBooking : allBookings) {
       if (carBooking != null && carBooking.getId().equals(UUID.fromString(bookingId))) {
-        carBookingDao.deleteCarBooking(carBooking);
+        carBookingDao.deleteBooking(carBooking);
       }
     }
   }
 
+  public Optional<CarBooking> getBookingById(UUID bookingId) {
+    return carBookingDao.findBookingById(bookingId);
+  }
+
   public CarBooking[] getBookingsByUser(String userId) {
 
-    CarBooking[] carBookings = carBookingDao.getCarBookings();
+    CarBooking[] carBookings = carBookingDao.getBookings();
 
     var userBookingCount = 0;
 
     for (CarBooking carBooking : carBookings) {
-      if (carBooking != null && carBooking.getUser().id().equals(UUID.fromString(userId))) {
+      if (carBooking != null && carBooking.getUser().getId().equals(UUID.fromString(userId))) {
         ++userBookingCount;
       }
     }
@@ -84,7 +97,7 @@ public class CarBookingService {
     CarBooking[] userBookings = new CarBooking[userBookingCount];
 
     for (CarBooking carBooking : carBookings) {
-      if (carBooking != null && carBooking.getUser().id().equals(UUID.fromString(userId))) {
+      if (carBooking != null && carBooking.getUser().getId().equals(UUID.fromString(userId))) {
         userBookings[i++] = carBooking;
       }
     }
@@ -93,7 +106,7 @@ public class CarBookingService {
 
   public CarBooking[] getAllBookings() {
 
-    CarBooking[] carBookings = carBookingDao.getCarBookings();
+    CarBooking[] carBookings = carBookingDao.getBookings();
     // The DAO initially set the array size but is it empty or not?
 
     var bookingCount = 0;
@@ -120,22 +133,12 @@ public class CarBookingService {
     return newBookings;
   }
 
-  public Car[] getAllAvailableCars() {
-
-    return carService.getAvailableCars(getAllBookings());
-  }
-
-  public Car[] getAllAvailableElectricCars() {
-
-    return carService.getAvailableElectricCars(getAllElectricBookings());
-  }
-
   private CarBooking[] getAllElectricBookings() {
     CarBooking[] allBookings = getAllBookings();
     var electricCarBookingCount = 0;
 
     for (CarBooking carBooking : allBookings) {
-      if (carBooking.getCar().getIsElectric()) {
+      if (carBooking.getCar().isElectric()) {
         electricCarBookingCount++;
       }
     }
@@ -148,14 +151,17 @@ public class CarBookingService {
     var i = 0;
 
     for (CarBooking carBooking : allBookings) {
-      if (carBooking.getCar().getIsElectric()) {
+      if (carBooking.getCar().isElectric()) {
         allElectricBookings[i++] = carBooking;
       }
     }
     return allElectricBookings;
   }
 
-  private CarBooking createCarBooking(User user, Car car, Integer bookingLength) {
+  private CarBooking createCarBooking(String userId, String carId, Integer bookingLength) {
+
+    User user = userService.getUserById(UUID.fromString(userId)).get();
+    Car car = carService.getCarById(UUID.fromString(carId)).get();
 
     return new CarBooking(
         user,

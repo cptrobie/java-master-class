@@ -1,10 +1,11 @@
 package com.cptrobie.car;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Car {
+public class Car implements Serializable {
 
   private final UUID id;
   private final String regNumber;
@@ -12,7 +13,12 @@ public class Car {
   private final Brand brand;
   private final boolean isElectric;
 
-  Car(UUID id, String regNumber, BigDecimal rentalPricePerDay, Brand brand, boolean isElectric) {
+
+  public Car(String regNumber, BigDecimal rentalPricePerDay, Brand brand, boolean isElectric) {
+    this(UUID.randomUUID(), regNumber, rentalPricePerDay, brand, isElectric);
+  }
+
+  public Car(UUID id, String regNumber, BigDecimal rentalPricePerDay, Brand brand, boolean isElectric) {
     this.id = id;
     this.regNumber = regNumber;
     this.rentalPricePerDay = rentalPricePerDay;
@@ -36,8 +42,20 @@ public class Car {
     return brand;
   }
 
-  public boolean getIsElectric() {
+  public boolean isElectric() {
     return isElectric;
+  }
+
+  public String serializeCar() {
+    return id.toString()
+        + ", "
+        + regNumber
+        + ", "
+        + rentalPricePerDay.toString()
+        + ", "
+        + brand.toString()
+        + ", "
+        + isElectric;
   }
 
   @Override
@@ -66,5 +84,10 @@ public class Car {
         && Objects.equals(regNumber, car.regNumber)
         && Objects.equals(rentalPricePerDay, car.rentalPricePerDay)
         && brand == car.brand;
+  }
+
+  @Override
+  public int hashCode() {
+    return super.hashCode();
   }
 }
