@@ -1,0 +1,1 @@
+Booking.UUID, User.UUID, User.name, Car.UUID, Car.regNumber, Car.rentalPricePerDay, Car.Brand, Car.isElectric, Booking.startDate, Booking.endDate, Booking.price, Booking.Status

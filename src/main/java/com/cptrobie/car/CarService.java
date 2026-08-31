@@ -1,13 +1,18 @@
 package com.cptrobie.car;
 
-import com.cptrobie.booking.CarBooking;
+import com.cptrobie.booking.Booking;
+import java.util.Optional;
 import java.util.UUID;
 
 public class CarService {
 
-  private final CarDao carDao = new CarDao();
+  private final CarDao carDao;
 
-  public Car[] getAvailableCars(CarBooking[] allBookings) {
+  public CarService(CarDao carDao) {
+    this.carDao = carDao;
+  }
+
+  public Car[] getAvailableCars(Booking[] allBookings) {
 
     Car[] allCars = carDao.getAllCars();
     if (allCars.length == 0) {
@@ -20,9 +25,9 @@ public class CarService {
     }
 
     var bookingIndex = 0;
-    for (CarBooking carBooking : allBookings) {
-      if (carBooking != null) {
-        bookedCars[bookingIndex++] = carBooking.getCar();
+    for (Booking booking : allBookings) {
+      if (booking != null) {
+        bookedCars[bookingIndex++] = booking.getCar();
       }
     }
 
@@ -52,22 +57,22 @@ public class CarService {
     return availableCars;
   }
 
-  public Car[] getAvailableElectricCars(CarBooking[] electricCarBookings) {
+  public Car[] getAvailableElectricCars(Booking[] electricBookings) {
 
     Car[] allElectricCars = carDao.getAllElectricCars();
     if (allElectricCars.length == 0) {
       return new Car[0];
     }
 
-    Car[] bookedCars = new Car[electricCarBookings.length];
+    Car[] bookedCars = new Car[electricBookings.length];
     if (bookedCars.length == 0) {
       return allElectricCars;
     }
 
     var bookingIndex = 0;
-    for (CarBooking carBooking : electricCarBookings) {
-      if (carBooking != null) {
-        bookedCars[bookingIndex++] = carBooking.getCar();
+    for (Booking booking : electricBookings) {
+      if (booking != null) {
+        bookedCars[bookingIndex++] = booking.getCar();
       }
     }
 
@@ -97,41 +102,11 @@ public class CarService {
     return availableElectricCars;
   }
 
-  public Car[] getCarsByBrand(Brand brand) {
-    Car[] allCars = carDao.getAllCars();
-    var brandCount = 0;
-
-    for (Car car : allCars) {
-      if (car.getBrand().equals(brand)) {
-        brandCount++;
-      }
-    }
-
-    if (brandCount == 0) {
-      throw new CarNotFoundException("No " + brand + " brand of cars were found.");
-    }
-
-    Car[] carsByBrand = new Car[brandCount];
-    var i = 0;
-
-    for (Car car : allCars) {
-      if (car.getBrand().equals(brand)) {
-        carsByBrand[i++] = car;
-      }
-    }
-
-    return carsByBrand;
+  public Optional<Car[]> getCarsByBrand(Brand brand) {
+    return carDao.findCarsByBrand(brand);
   }
 
-  public Car getCarById(String carId) {
-    Car[] allCars = carDao.getAllCars();
-
-    for (Car car : allCars) {
-      if (car.getId().equals(UUID.fromString(carId))) {
-        return car;
-      }
-    }
-    // If we get here then the car was not found
-    throw new CarNotFoundException("Car with Id of " + carId + " was not found");
+  public Optional<Car> getCarById(UUID carId) {
+    return carDao.findCarById(carId);
   }
 }

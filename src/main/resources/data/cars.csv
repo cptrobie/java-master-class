@@ -1,0 +1,9 @@
+UUID, regNumber, rentalPricePerDay, BRAND, isElectric
+4a8ed515-6a39-47b8-bb9f-4ae9e0424f8d, Audi-1, 90.00, AUDI, false
+6f14d68f-17f5-444b-8ea0-3adf7f7382f7, Audi-2, 80.00, AUDI, false
+b9943d5c-2788-471e-a09f-47f3195c7008, Merc-1, 100.00, MERCEDES, false
+a8465e98-74b4-45a1-94ac-8c27ea108649, Merc-2, 70.00, MERCEDES, true
+3634853d-2f47-445f-be09-17c94cfa42f8, Tesla-1, 50.00, TESLA, true
+dd3f1192-b0ac-4214-be58-229a102ed949, Tesla-2, 65.00, TESLA, true
+b24afa33-941c-4cd6-81e1-a6a3eb30754f, Toy-1, 35.00, TOYOTA, false
+553a63f4-3725-4d3a-88e0-2837afaab5f0, Toy-2, 55.00, TOYOTA, false

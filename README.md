@@ -361,7 +361,7 @@ src/
 ```
 
 **Key tasks:**
-- Create POJO classes: `User`, `Car`, `CarBooking`, `Brand` enum
+- Create POJO classes: `User`, `Car`, `Booking`, `Brand` enum
 - Create DAO classes: `UserDao`, `CarDao`, `CarBookingDao`
 - Create service classes for business logic
 - Implement the CLI menu loop in `Main.java`
@@ -929,7 +929,7 @@ Write unit tests for all services and DAO implementations (array and file only â
 
 | Class | What to test |
 |-------|-------------|
-| `CarBookingArrayDataAccessService` | Save, delete, get all, find by ID |
+| `BookingArrayDataAccessService` | Save, delete, get all, find by ID |
 | `CarArrayDataAccessService` | Get all cars, find by ID |
 | `UserArrayDataAccessService` | Get all users, find by ID |
 
@@ -937,7 +937,7 @@ Write unit tests for all services and DAO implementations (array and file only â
 
 | Class | What to test |
 |-------|-------------|
-| `CarBookingFileDataAccessService` | Save booking to file, delete booking from file, read bookings from file |
+| `BookingFileDataAccessService` | Save booking to file, delete booking from file, read bookings from file |
 
 Use JUnit's `@TempDir` to create a temporary file for each test so tests don't interfere with each other:
 
@@ -1208,7 +1208,7 @@ erDiagram
 - A **Car** can have many **CarBookings** (one-to-many)
 - A **CarBooking** belongs to exactly one **AppUser** and one **Car** (many-to-one)
 
-This means `CAR_BOOKING` is the join table that holds `app_user_id` and `car_id` as foreign keys. In JPA this is modelled with `@ManyToOne` on the `CarBooking` entity.
+This means `CAR_BOOKING` is the join table that holds `app_user_id` and `car_id` as foreign keys. In JPA this is modelled with `@ManyToOne` on the `Booking` entity.
 
 **Entity tables (H2 database):**
 
