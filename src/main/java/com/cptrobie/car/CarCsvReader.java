@@ -33,7 +33,7 @@ public class CarCsvReader {
         index++;
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      System.out.println(e.getMessage());
     }
 
     return array;

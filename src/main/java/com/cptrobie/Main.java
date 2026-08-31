@@ -40,7 +40,7 @@ public class Main {
         var input = scanner.nextLine().trim();
         switch (Integer.parseInt(input)) {
           case 1 -> handleSaveBooking(bookingService, carService, userService, scanner);
-          case 2 -> handleDeleteBooking(bookingService, userService, scanner);
+          case 2 -> handleDeleteBooking(bookingService, scanner);
           case 3 -> handleUserBookedCars(bookingService, userService, scanner);
           case 4 -> handleViewBookings(bookingService);
           case 5 -> handleListAvailableCars(bookingService, carService, false);
@@ -122,7 +122,7 @@ public class Main {
   }
 
   private static void handleDeleteBooking(
-      BookingService bookingService, UserService userService, Scanner scanner) {
+      BookingService bookingService, Scanner scanner) {
     // From Main Menu Option 2
     try {
       if (bookingService.getAllBookings().length == 0) {
