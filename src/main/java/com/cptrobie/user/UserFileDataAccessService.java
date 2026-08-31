@@ -1,19 +1,20 @@
 package com.cptrobie.user;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public class UserFileDataAccessService implements UserDao {
   private final String filePath;
-  private static User[] USERS;
+  private static List<User> USERS;
 
   public UserFileDataAccessService(String filePath) {
     this.filePath = filePath;
-    USERS = UserCsvReader.readUsersCsvToArray(filePath);
+    USERS = UserCsvReader.readUsersCsvToList(filePath);
   }
 
   @Override
-  public User[] getUsers() {
+  public List<User> getUsers() {
     return USERS;
   }
 

@@ -1,5 +1,6 @@
 package com.cptrobie.user;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -10,7 +11,7 @@ public class UserService {
     this.userDao = userDao;
   }
 
-  public User[] getAllUsers() {
+  public List<User> getAllUsers() {
     return userDao.getUsers();
   }
 

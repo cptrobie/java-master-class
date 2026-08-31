@@ -4,10 +4,11 @@ import java.io.Serializable;
 import java.util.UUID;
 
 public class User implements Serializable {
+    private  UUID id;
+    private  String name;
 
-    private final UUID id;
-    private final String name;
 
+  public User() {}
 
   public User(String name) {
     this(UUID.randomUUID(), name);
@@ -23,8 +24,16 @@ public class User implements Serializable {
     return id;
   }
 
+  public void setId(UUID id) {
+    this.id = id;
+  }
+
   public String getName() {
     return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 
   public String serializeUser() {

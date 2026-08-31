@@ -7,6 +7,7 @@ import com.cptrobie.car.Car;
 import com.cptrobie.car.CarFileDataAccessService;
 import com.cptrobie.car.CarService;
 import com.cptrobie.user.UserFileDataAccessService;
+import com.cptrobie.user.UserListDataAccessService;
 import com.cptrobie.user.UserService;
 import java.util.Scanner;
 import java.util.UUID;
@@ -17,7 +18,7 @@ public class Main {
 
     var userService =
         new UserService(new UserFileDataAccessService("src/main/resources/data/users.csv"));
-    // new UserService(new UserArrayDataAccessService());
+    // new UserService(new UserListDataAccessService());
 
     var carService =
         new CarService(new CarFileDataAccessService("src/main/resources/data/cars.csv"));
