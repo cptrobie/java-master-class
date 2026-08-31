@@ -110,10 +110,10 @@ public class Main {
         return;
       }
 
-      Booking newBooking =
-          bookingService
-              .getBookingById(bookingService.bookCar(userId, carId, bookingLength))
-              .get();
+      UUID newBookingId = bookingService.bookCar(userId, carId, bookingLength);
+      Booking newBooking = bookingService.getBookingById(newBookingId)
+              .orElseThrow(() -> new IllegalStateException("Booking not found"));
+
       System.out.println("This is to confirm the following booking details:");
       System.out.println(newBooking);
     } catch (Exception e) {
@@ -159,7 +159,8 @@ public class Main {
       System.out.println("Invalid User Id. \n");
       return;
     }
-    var user = userService.getUserById(UUID.fromString(userId)).get();
+    var user = userService.getUserById(UUID.fromString(userId))
+            .orElseThrow(() -> new IllegalStateException("User not found"));
 
     var userBookings = bookingService.getBookingsByUser(userId);
 

@@ -160,8 +160,10 @@ public class BookingService {
 
   private Booking createCarBooking(String userId, String carId, Integer bookingLength) {
 
-    User user = userService.getUserById(UUID.fromString(userId)).get();
-    Car car = carService.getCarById(UUID.fromString(carId)).get();
+    User user = userService.getUserById(UUID.fromString(userId))
+            .orElseThrow(() -> new IllegalStateException("User not found"));
+    Car car = carService.getCarById(UUID.fromString(carId))
+            .orElseThrow(() -> new IllegalStateException("Car not found"));
 
     return new Booking(
         user,
