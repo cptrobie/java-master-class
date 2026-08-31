@@ -1,6 +1,6 @@
 package com.cptrobie.car;
 
-import com.cptrobie.booking.CarBooking;
+import com.cptrobie.booking.Booking;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -12,7 +12,7 @@ public class CarService {
     this.carDao = carDao;
   }
 
-  public Car[] getAvailableCars(CarBooking[] allBookings) {
+  public Car[] getAvailableCars(Booking[] allBookings) {
 
     Car[] allCars = carDao.getAllCars();
     if (allCars.length == 0) {
@@ -25,9 +25,9 @@ public class CarService {
     }
 
     var bookingIndex = 0;
-    for (CarBooking carBooking : allBookings) {
-      if (carBooking != null) {
-        bookedCars[bookingIndex++] = carBooking.getCar();
+    for (Booking booking : allBookings) {
+      if (booking != null) {
+        bookedCars[bookingIndex++] = booking.getCar();
       }
     }
 
@@ -57,22 +57,22 @@ public class CarService {
     return availableCars;
   }
 
-  public Car[] getAvailableElectricCars(CarBooking[] electricCarBookings) {
+  public Car[] getAvailableElectricCars(Booking[] electricBookings) {
 
     Car[] allElectricCars = carDao.getAllElectricCars();
     if (allElectricCars.length == 0) {
       return new Car[0];
     }
 
-    Car[] bookedCars = new Car[electricCarBookings.length];
+    Car[] bookedCars = new Car[electricBookings.length];
     if (bookedCars.length == 0) {
       return allElectricCars;
     }
 
     var bookingIndex = 0;
-    for (CarBooking carBooking : electricCarBookings) {
-      if (carBooking != null) {
-        bookedCars[bookingIndex++] = carBooking.getCar();
+    for (Booking booking : electricBookings) {
+      if (booking != null) {
+        bookedCars[bookingIndex++] = booking.getCar();
       }
     }
 

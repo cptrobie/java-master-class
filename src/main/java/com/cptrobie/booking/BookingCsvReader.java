@@ -12,11 +12,11 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public class CarBookingCsvReader {
+public class BookingCsvReader {
 
-  public static CarBooking[] readBookingsCsvToArray(String filePath) {
+  public static Booking[] readBookingsCsvToArray(String filePath) {
     int lineCount = countLines(filePath);
-    CarBooking[] array = new CarBooking[lineCount];
+    Booking[] array = new Booking[lineCount];
 
     try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
       String line;
@@ -41,7 +41,7 @@ public class CarBookingCsvReader {
         BigDecimal price = new BigDecimal(parts[10].trim());
         BookingStatus status = BookingStatus.valueOf(parts[11].trim());
 
-        array[index] = new CarBooking(bookingId, user, car, startDate, endDate, price, status);
+        array[index] = new Booking(bookingId, user, car, startDate, endDate, price, status);
         index++;
       }
     } catch (IOException e) {

@@ -43,6 +43,6 @@ public class User implements Serializable {
 
   @Override
   public int hashCode() {
-    return 0;
+    return super.hashCode();
   }
 }

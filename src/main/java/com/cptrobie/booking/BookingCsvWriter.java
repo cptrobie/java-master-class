@@ -5,9 +5,9 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class CarBookingCsvWriter {
+public class BookingCsvWriter {
 
-  public static void writeBookingsCsvFromArray(CarBooking[] bookings, String csvFilePath) {
+  public static void writeBookingsCsvFromArray(Booking[] bookings, String csvFilePath) {
 
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvFilePath))) {
 
@@ -18,16 +18,16 @@ public class CarBookingCsvWriter {
               + "Booking.startDate, Booking.endDate, Booking.price, Booking.Status");
       writer.newLine();
 
-      for (CarBooking carBooking : bookings) {
-        if (carBooking != null) {
+      for (Booking booking : bookings) {
+        if (booking != null) {
           // writer.write(escapeSpecialCharacters(carBooking.serializeCarBooking()));
-          writer.write(carBooking.serializeCarBooking());
+          writer.write(booking.serializeCarBooking());
           writer.newLine();
         }
       }
     } catch (IOException e) {
       System.err.println("An error occurred while writing the CSV file.");
-      e.printStackTrace();
+      System.out.println(e.getMessage());
     }
   }
 }

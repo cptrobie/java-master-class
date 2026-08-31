@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
-public class CarBooking implements Serializable {
+public class Booking implements Serializable {
 
   private final UUID id;
   private final User user;
@@ -18,7 +18,7 @@ public class CarBooking implements Serializable {
   private final BigDecimal price;
   private final BookingStatus status;
 
-  public CarBooking(
+  public Booking(
       User user,
       Car car,
       LocalDate startDate,
@@ -28,7 +28,7 @@ public class CarBooking implements Serializable {
     this(UUID.randomUUID(), user, car, startDate, endDate, price, status);
   }
 
-  public CarBooking(UUID id, User user, Car car, LocalDate startDate, LocalDate endDate, BigDecimal price, BookingStatus status) {
+  public Booking(UUID id, User user, Car car, LocalDate startDate, LocalDate endDate, BigDecimal price, BookingStatus status) {
     this.id = id;
     this.user = user;
     this.car = car;
@@ -106,7 +106,7 @@ public class CarBooking implements Serializable {
   @Override
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) return false;
-    CarBooking that = (CarBooking) o;
+    Booking that = (Booking) o;
     return Objects.equals(id, that.id)
         && Objects.equals(user, that.user)
         && Objects.equals(car, that.car)

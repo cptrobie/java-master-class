@@ -1,8 +1,8 @@
 package com.cptrobie;
 
-import com.cptrobie.booking.CarBooking;
-import com.cptrobie.booking.CarBookingFileDataAccessService;
-import com.cptrobie.booking.CarBookingService;
+import com.cptrobie.booking.Booking;
+import com.cptrobie.booking.BookingFileDataAccessService;
+import com.cptrobie.booking.BookingService;
 import com.cptrobie.car.Car;
 import com.cptrobie.car.CarFileDataAccessService;
 import com.cptrobie.car.CarService;
@@ -23,9 +23,9 @@ public class Main {
         new CarService(new CarFileDataAccessService("src/main/resources/data/cars.csv"));
     // new CarService( new CarArrayDataAccessService() );
 
-    var carBookingService =
-        new CarBookingService(
-            new CarBookingFileDataAccessService("src/main/resources/data/bookings.csv"),
+    var bookingService =
+        new BookingService(
+            new BookingFileDataAccessService("src/main/resources/data/bookings.csv"),
             // new CarBookingArrayDataAccessService(),
             carService,
             userService);
@@ -39,12 +39,12 @@ public class Main {
         displayBookingSystemMenuOptions();
         var input = scanner.nextLine().trim();
         switch (Integer.parseInt(input)) {
-          case 1 -> handleSaveBooking(carBookingService, carService, userService, scanner);
-          case 2 -> handleDeleteBooking(carBookingService, userService, scanner);
-          case 3 -> handleUserBookedCars(carBookingService, userService, scanner);
-          case 4 -> handleViewBookings(carBookingService);
-          case 5 -> handleListAvailableCars(carBookingService, carService, false);
-          case 6 -> handleListAvailableCars(carBookingService, carService, true);
+          case 1 -> handleSaveBooking(bookingService, carService, userService, scanner);
+          case 2 -> handleDeleteBooking(bookingService, userService, scanner);
+          case 3 -> handleUserBookedCars(bookingService, userService, scanner);
+          case 4 -> handleViewBookings(bookingService);
+          case 5 -> handleListAvailableCars(bookingService, carService, false);
+          case 6 -> handleListAvailableCars(bookingService, carService, true);
           case 7 -> handleListUsers(userService);
           case 8 -> continueApp = false;
           default -> System.out.println("Invalid input, please try again");
@@ -71,13 +71,13 @@ public class Main {
   }
 
   private static void handleSaveBooking(
-      CarBookingService carBookingService,
+      BookingService bookingService,
       CarService carService,
       UserService userService,
       Scanner scanner) {
     // From Main Menu Option 1
 
-    if (handleListAvailableCars(carBookingService, carService, false) == 0) {
+    if (handleListAvailableCars(bookingService, carService, false) == 0) {
       return;
     }
 
@@ -110,26 +110,26 @@ public class Main {
         return;
       }
 
-      CarBooking newCarBooking =
-          carBookingService
-              .getBookingById(carBookingService.bookCar(userId, carId, bookingLength))
+      Booking newBooking =
+          bookingService
+              .getBookingById(bookingService.bookCar(userId, carId, bookingLength))
               .get();
       System.out.println("This is to confirm the following booking details:");
-      System.out.println(newCarBooking);
+      System.out.println(newBooking);
     } catch (Exception e) {
       System.out.println(e.getMessage());
     }
   }
 
   private static void handleDeleteBooking(
-      CarBookingService carBookingService, UserService userService, Scanner scanner) {
+      BookingService bookingService, UserService userService, Scanner scanner) {
     // From Main Menu Option 2
     try {
-      if (carBookingService.getAllBookings().length == 0) {
+      if (bookingService.getAllBookings().length == 0) {
         System.out.println("There are no bookings to delete.\n");
         return;
       }
-      handleViewBookings(carBookingService);
+      handleViewBookings(bookingService);
 
       System.out.println("Enter the Booking Id to delete");
       var bookingId = scanner.nextLine().trim();
@@ -139,7 +139,7 @@ public class Main {
         return;
       }
 
-      carBookingService.deleteCarBooking(bookingId);
+      bookingService.deleteCarBooking(bookingId);
       System.out.println("Booking " + bookingId + " has been deleted");
       System.out.println();
     } catch (Exception e) {
@@ -148,7 +148,7 @@ public class Main {
   }
 
   private static void handleUserBookedCars(
-      CarBookingService carBookingService, UserService userService, Scanner scanner) {
+      BookingService bookingService, UserService userService, Scanner scanner) {
     // From Main Menu option 3
     handleListUsers(userService);
 
@@ -161,7 +161,7 @@ public class Main {
     }
     var user = userService.getUserById(UUID.fromString(userId)).get();
 
-    var userBookings = carBookingService.getBookingsByUser(userId);
+    var userBookings = bookingService.getBookingsByUser(userId);
 
     if (userBookings.length == 0) {
       System.out.println("\nUser " + userId + " has no bookings. \n");
@@ -174,28 +174,28 @@ public class Main {
     System.out.println();
   }
 
-  private static void handleViewBookings(CarBookingService carBookingService) {
+  private static void handleViewBookings(BookingService bookingService) {
     // From Main Menu option 4
 
-    CarBooking[] bookings = carBookingService.getAllBookings();
+    Booking[] bookings = bookingService.getAllBookings();
 
     if (bookings.length == 0) {
       System.out.println("There are no bookings to display \n");
       return;
     }
-    for (CarBooking booking : bookings) {
+    for (Booking booking : bookings) {
       System.out.println(booking);
     }
     System.out.println();
   }
 
   private static int handleListAvailableCars(
-      CarBookingService carBookingService, CarService carService, boolean isElectric) {
+      BookingService bookingService, CarService carService, boolean isElectric) {
     // List all available cars
     Car[] availableCars =
         isElectric
-            ? carService.getAvailableElectricCars(carBookingService.getAllBookings())
-            : carService.getAvailableCars(carBookingService.getAllBookings());
+            ? carService.getAvailableElectricCars(bookingService.getAllBookings())
+            : carService.getAvailableCars(bookingService.getAllBookings());
 
     if (availableCars.length > 0) {
       for (Car car : availableCars) {

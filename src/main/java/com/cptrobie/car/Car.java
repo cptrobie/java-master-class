@@ -47,32 +47,17 @@ public class Car implements Serializable {
   }
 
   public String serializeCar() {
-    return id.toString()
-        + ", "
-        + regNumber
-        + ", "
-        + rentalPricePerDay.toString()
-        + ", "
-        + brand.toString()
-        + ", "
-        + isElectric;
+    return id.toString() + ", " + regNumber + ", "
+        + rentalPricePerDay.toString() + ", "
+        + brand.toString() + ", " + isElectric;
   }
 
   @Override
   public String toString() {
     return "Car {"
-        + "id="
-        + id
-        + ", regNumber='"
-        + regNumber
-        + '\''
-        + ", rentalPricePerDay="
-        + rentalPricePerDay
-        + ", brand="
-        + brand
-        + ", isElectric="
-        + isElectric
-        + " }";
+        + "id=" + id + ", regNumber='" + regNumber + '\''
+        + ", rentalPricePerDay=" + rentalPricePerDay
+        + ", brand=" + brand + ", isElectric=" + isElectric + " }";
   }
 
   @Override

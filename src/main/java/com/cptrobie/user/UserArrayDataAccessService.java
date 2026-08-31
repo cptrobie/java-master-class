@@ -34,7 +34,6 @@ public class UserArrayDataAccessService implements UserDao {
         return Optional.of(user);
       }
     }
-
-    throw new UserNotFoundException("User with id of " + userId + " was not found");
+    return Optional.empty();
   }
 }

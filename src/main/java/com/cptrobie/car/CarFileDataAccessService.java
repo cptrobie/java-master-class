@@ -55,7 +55,7 @@ public class CarFileDataAccessService implements CarDao {
         return Optional.of(car);
       }
     }
-    throw new CarNotFoundException("Car with id of \" + carId + \" was not found");
+    return Optional.empty();
   }
 
   @Override
@@ -69,7 +69,7 @@ public class CarFileDataAccessService implements CarDao {
     }
 
     if (brandCount == 0) {
-      throw new CarNotFoundException("No " + brand + " brand of cars were found.");
+      return Optional.empty();
     }
 
     Car[] carsByBrand = new Car[brandCount];
