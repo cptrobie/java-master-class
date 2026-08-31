@@ -1,43 +1,28 @@
 package com.cptrobie.car;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class CarFileDataAccessService implements CarDao {
   private final String filePath;
-  private static Car[] CARS;
+  private static List<Car> CARS;
 
   public CarFileDataAccessService(String filePath) {
     this.filePath = filePath;
-    CARS = CarCsvReader.readCarsCsvToArray(filePath);
+    CARS = CarCsvReader.readCarsCsvToList(filePath);
   }
 
   @Override
-  public Car[] getAllCars() {
+  public List<Car> getAllCars() {
     return CARS;
   }
 
   @Override
-  public Car[] getAllElectricCars() {
-
-    var electricCarCount = 0;
-
-    for (Car car : CARS) {
-      if (car.isElectric()) {
-        electricCarCount++;
-      }
-    }
-
-    if (electricCarCount == 0) {
-      return new Car[0];
-    }
-
-    Car[] electricCars = new Car[electricCarCount];
-    var i = 0;
+  public List<Car> getAllElectricCars() {
+    List<Car> electricCars = new ArrayList<>();
 
     for (Car car : CARS) {
       if (car.isElectric()) {
-        electricCars[i++] = car;
+        electricCars.add(car);
       }
     }
     return electricCars;
@@ -59,25 +44,16 @@ public class CarFileDataAccessService implements CarDao {
   }
 
   @Override
-  public Optional<Car[]> findCarsByBrand(Brand brand) {
-
-    var brandCount = 0;
-    for (Car car : CARS) {
-      if (car.getBrand().equals(brand)) {
-        brandCount++;
-      }
-    }
-
-    if (brandCount == 0) {
+  public Optional<List<Car>> findCarsByBrand(Brand brand) {
+    if (brand == null) {
       return Optional.empty();
     }
 
-    Car[] carsByBrand = new Car[brandCount];
-    var i = 0;
+    List<Car> carsByBrand = new ArrayList<>();
 
     for (Car car : CARS) {
       if (car.getBrand().equals(brand)) {
-        carsByBrand[i++] = car;
+        carsByBrand.add(car);
       }
     }
     return Optional.of(carsByBrand);

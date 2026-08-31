@@ -11,6 +11,7 @@ import java.util.UUID;
 
 public class UserCsvReader {
 
+  @Deprecated(since = "Phase 3", forRemoval = false)
   public static User[] readUsersCsvToArray(String filePath) {
     int lineCount = countLines(filePath);
     User[] array = new User[lineCount];

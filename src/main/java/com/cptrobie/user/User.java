@@ -7,7 +7,6 @@ public class User implements Serializable {
     private  UUID id;
     private  String name;
 
-
   public User() {}
 
   public User(String name) {

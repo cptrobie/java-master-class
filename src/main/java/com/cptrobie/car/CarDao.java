@@ -1,15 +1,16 @@
 package com.cptrobie.car;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface CarDao {
 
-  Car[] getAllCars();
+  List<Car> getAllCars();
 
-  Car[] getAllElectricCars();
+  List<Car> getAllElectricCars();
 
   Optional<Car> findCarById(UUID carId);
 
-  Optional<Car[]> findCarsByBrand(Brand brand);
+  Optional<List<Car>> findCarsByBrand(Brand brand);
 }
