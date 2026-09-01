@@ -2,12 +2,17 @@ package com.cptrobie;
 
 import com.cptrobie.booking.Booking;
 import com.cptrobie.booking.BookingFileDataAccessService;
+import com.cptrobie.booking.BookingListDataAccessService;
 import com.cptrobie.booking.BookingService;
 import com.cptrobie.car.Car;
 import com.cptrobie.car.CarFileDataAccessService;
+import com.cptrobie.car.CarListDataAccessService;
 import com.cptrobie.car.CarService;
 import com.cptrobie.user.UserFileDataAccessService;
+import com.cptrobie.user.UserListDataAccessService;
 import com.cptrobie.user.UserService;
+
+import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -16,17 +21,17 @@ public class Main {
   static void main(String[] args) {
 
     var userService =
-        new UserService(new UserFileDataAccessService("src/main/resources/data/users.csv"));
-    // new UserService(new UserArrayDataAccessService());
+            new UserService(new UserFileDataAccessService("src/main/resources/data/users.csv"));
+     //new UserService(new UserListDataAccessService());
 
     var carService =
-        new CarService(new CarFileDataAccessService("src/main/resources/data/cars.csv"));
-    // new CarService( new CarArrayDataAccessService() );
+            new CarService(new CarFileDataAccessService("src/main/resources/data/cars.csv"));
+     //new CarService( new CarListDataAccessService() );
 
     var bookingService =
         new BookingService(
             new BookingFileDataAccessService("src/main/resources/data/bookings.csv"),
-            // new CarBookingArrayDataAccessService(),
+             //new BookingListDataAccessService(),
             carService,
             userService);
 
@@ -103,14 +108,14 @@ public class Main {
     var bookingDays = scanner.nextLine().trim();
 
     try {
-      int bookingLength = Integer.parseInt(bookingDays);
+      int bookingDuration = Integer.parseInt(bookingDays);
 
-      if (bookingLength <= 0) {
+      if (bookingDuration < 1) {
         System.out.println("Invalid booking length. \n");
         return;
       }
 
-      UUID newBookingId = bookingService.bookCar(userId, carId, bookingLength);
+      UUID newBookingId = bookingService.bookCar(userId, carId, bookingDuration);
       Booking newBooking = bookingService.getBookingById(newBookingId)
               .orElseThrow(() -> new IllegalStateException("Booking not found"));
 
@@ -125,7 +130,7 @@ public class Main {
       BookingService bookingService, Scanner scanner) {
     // From Main Menu Option 2
     try {
-      if (bookingService.getAllBookings().length == 0) {
+      if (bookingService.getAllBookings().size() == 0) {
         System.out.println("There are no bookings to delete.\n");
         return;
       }
@@ -164,7 +169,7 @@ public class Main {
 
     var userBookings = bookingService.getBookingsByUser(userId);
 
-    if (userBookings.length == 0) {
+    if (userBookings.isEmpty()) {
       System.out.println("\nUser " + userId + " has no bookings. \n");
       return;
     }
@@ -178,9 +183,9 @@ public class Main {
   private static void handleViewBookings(BookingService bookingService) {
     // From Main Menu option 4
 
-    Booking[] bookings = bookingService.getAllBookings();
+    List<Booking> bookings = bookingService.getAllBookings();
 
-    if (bookings.length == 0) {
+    if (bookings.isEmpty()) {
       System.out.println("There are no bookings to display \n");
       return;
     }
@@ -192,13 +197,14 @@ public class Main {
 
   private static int handleListAvailableCars(
       BookingService bookingService, CarService carService, boolean isElectric) {
-    // List all available cars
-    Car[] availableCars =
+    // Menu item 5 if not electric & menu item 6 for electric
+
+    List<Car> availableCars =
         isElectric
             ? carService.getAvailableElectricCars(bookingService.getAllBookings())
             : carService.getAvailableCars(bookingService.getAllBookings());
 
-    if (availableCars.length > 0) {
+    if (!availableCars.isEmpty()) {
       for (Car car : availableCars) {
         System.out.println(car.toString());
       }
@@ -210,7 +216,7 @@ public class Main {
       }
     }
     System.out.println();
-    return availableCars.length;
+    return availableCars.size();
   }
 
   private static void handleListUsers(UserService userService) {

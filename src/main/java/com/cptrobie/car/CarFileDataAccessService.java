@@ -1,85 +1,33 @@
 package com.cptrobie.car;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
-public class CarFileDataAccessService implements CarDao {
+public class CarFileDataAccessService extends CarListDataAccessService implements CarDao {
   private final String filePath;
-  private static Car[] CARS;
+
 
   public CarFileDataAccessService(String filePath) {
     this.filePath = filePath;
-    CARS = CarCsvReader.readCarsCsvToArray(filePath);
+    CARS = CarCsvReader.readCarsCsvToList(filePath);
   }
 
   @Override
-  public Car[] getAllCars() {
-    return CARS;
+  public List<Car> getAllCars() {
+    return super.getAllCars();
   }
 
   @Override
-  public Car[] getAllElectricCars() {
-
-    var electricCarCount = 0;
-
-    for (Car car : CARS) {
-      if (car.isElectric()) {
-        electricCarCount++;
-      }
-    }
-
-    if (electricCarCount == 0) {
-      return new Car[0];
-    }
-
-    Car[] electricCars = new Car[electricCarCount];
-    var i = 0;
-
-    for (Car car : CARS) {
-      if (car.isElectric()) {
-        electricCars[i++] = car;
-      }
-    }
-    return electricCars;
+  public List<Car> getAllElectricCars() {
+    return super.getAllElectricCars();
   }
 
   @Override
   public Optional<Car> findCarById(UUID carId) {
-
-    if (carId == null) {
-      return Optional.empty();
-    }
-
-    for (Car car : CARS) {
-      if (car != null && car.getId().equals(carId)) {
-        return Optional.of(car);
-      }
-    }
-    return Optional.empty();
+    return super.findCarById(carId);
   }
 
   @Override
-  public Optional<Car[]> findCarsByBrand(Brand brand) {
-
-    var brandCount = 0;
-    for (Car car : CARS) {
-      if (car.getBrand().equals(brand)) {
-        brandCount++;
-      }
-    }
-
-    if (brandCount == 0) {
-      return Optional.empty();
-    }
-
-    Car[] carsByBrand = new Car[brandCount];
-    var i = 0;
-
-    for (Car car : CARS) {
-      if (car.getBrand().equals(brand)) {
-        carsByBrand[i++] = car;
-      }
-    }
-    return Optional.of(carsByBrand);
+  public Optional<List<Car>> findCarsByBrand(Brand brand) {
+    return super.findCarsByBrand(brand);
   }
 }

@@ -1,11 +1,12 @@
 package com.cptrobie.booking;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface BookingDao {
 
-  Booking[] getBookings();
+  List<Booking> getBookings();
 
   Optional<Booking> findBookingById(UUID bookingId);
 

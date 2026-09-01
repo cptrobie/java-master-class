@@ -1,1 +1,2 @@
 Booking.UUID, User.UUID, User.name, Car.UUID, Car.regNumber, Car.rentalPricePerDay, Car.Brand, Car.isElectric, Booking.startDate, Booking.endDate, Booking.price, Booking.Status
+cf0c6434-4aac-4ff1-82b6-3983e49e271a, 752bfaa4-8fb0-456d-a920-6eb7fbc0beea, Owen, 553a63f4-3725-4d3a-88e0-2837afaab5f0, Toy-2, 55.00, TOYOTA, false, 2026-09-01, 2026-09-03, 110.00, ACTIVE

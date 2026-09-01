@@ -4,10 +4,11 @@ package com.cptrobie.booking;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 
 public class BookingCsvWriter {
 
-  public static void writeBookingsCsvFromArray(Booking[] bookings, String csvFilePath) {
+  public static void writeBookingsCsvFromList(List<Booking> bookings, String csvFilePath) {
 
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvFilePath))) {
 

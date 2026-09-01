@@ -1,15 +1,13 @@
 package com.cptrobie.car;
 
 import java.math.BigDecimal;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
-public class CarArrayDataAccessService implements CarDao {
-  private static final Car[] CARS;
+public class CarListDataAccessService implements CarDao {
+  protected static  List<Car> CARS;
 
   static {
-    CARS =
-        new Car[] {
+    CARS = List.of(
           new Car(
               UUID.fromString("4a8ed515-6a39-47b8-bb9f-4ae9e0424f8d"),
               "Audi-1",
@@ -58,37 +56,23 @@ public class CarArrayDataAccessService implements CarDao {
               BigDecimal.valueOf(55.00),
               Brand.TOYOTA,
               false)
-        };
+    );
   }
 
   @Override
-  public Car[] getAllCars() {
+  public List<Car> getAllCars() {
     return CARS;
   }
 
   @Override
-  public Car[] getAllElectricCars() {
-    var electricCarCount = 0;
+  public List<Car> getAllElectricCars() {
+    List<Car> electricCars = new ArrayList<Car>();
 
-    for (Car car : CARS) {
-      if (car.isElectric()) {
-        electricCarCount++;
+   for (Car car : CARS) {
+      if (car != null && car.isElectric()) {
+        electricCars.add(car);
       }
     }
-
-    if (electricCarCount == 0) {
-      return new Car[0];
-    }
-
-    Car[] electricCars = new Car[electricCarCount];
-    var i = 0;
-
-    for (Car car : CARS) {
-      if (car.isElectric()) {
-        electricCars[i++] = car;
-      }
-    }
-
     return electricCars;
   }
 
@@ -108,25 +92,16 @@ public class CarArrayDataAccessService implements CarDao {
   }
 
   @Override
-  public Optional<Car[]> findCarsByBrand(Brand brand) {
-
-    var brandCount = 0;
-    for (Car car : CARS) {
-      if (car.getBrand().equals(brand)) {
-        brandCount++;
-      }
-    }
-
-    if (brandCount == 0) {
+  public Optional<List<Car>> findCarsByBrand(Brand brand) {
+    if (brand == null) {
       return Optional.empty();
     }
 
-    Car[] carsByBrand = new Car[brandCount];
-    var i = 0;
+    List<Car> carsByBrand = new ArrayList<Car>();
 
     for (Car car : CARS) {
-      if (car.getBrand().equals(brand)) {
-        carsByBrand[i++] = car;
+      if (car != null && car.getBrand().equals(brand)) {
+        carsByBrand.add(car);
       }
     }
     return Optional.of(carsByBrand);

@@ -1,34 +1,26 @@
 package com.cptrobie.user;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class UserFileDataAccessService implements UserDao {
+public class UserFileDataAccessService extends UserListDataAccessService implements UserDao {
   private final String filePath;
-  private static User[] USERS;
+
 
   public UserFileDataAccessService(String filePath) {
     this.filePath = filePath;
-    USERS = UserCsvReader.readUsersCsvToArray(filePath);
+    USERS = UserCsvReader.readUsersCsvToList(filePath);
   }
 
+
   @Override
-  public User[] getUsers() {
-    return USERS;
+  public List<User> getUsers() {
+    return super.getUsers();
   }
 
   @Override
   public Optional<User> findUserById(UUID userId) {
-
-    if (userId == null) {
-      return Optional.empty();
-    }
-
-    for (User user : USERS) {
-      if (user != null && user.getId().equals(userId)) {
-        return Optional.of(user);
-      }
-    }
-    return Optional.empty();
+    return super.findUserById(userId);
   }
 }
