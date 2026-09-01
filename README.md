@@ -929,8 +929,8 @@ Write unit tests for all services and DAO implementations (array and file only â
 
 | Class | What to test |
 |-------|-------------|
-| `BookingArrayDataAccessService` | Save, delete, get all, find by ID |
-| `CarArrayDataAccessService` | Get all cars, find by ID |
+| `BookingListDataAccessService` | Save, delete, get all, find by ID |
+| `CarListDataAccessService` | Get all cars, find by ID |
 | `UserArrayDataAccessService` | Get all users, find by ID |
 
 **File DAO (use temp files):**

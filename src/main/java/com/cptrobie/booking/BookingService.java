@@ -6,8 +6,7 @@ import com.cptrobie.user.User;
 import com.cptrobie.user.UserService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class BookingService {
 
@@ -22,18 +21,24 @@ public class BookingService {
     this.userService = userService;
   }
 
-  public UUID bookCar(String userId, String carId, Integer bookingLength) {
+  public UUID bookCar(String userId, String carId, Integer bookingDuration) {
+    // Arg validation checks
+    if (userId == null || carId == null || bookingDuration < 1) {
+      throw new IllegalArgumentException("Invalid booking arguments");
+    }
+
     // Check to see if any cars are available to book
-    Car[] availableCars = carService.getAvailableCars(getAllBookings());
-    if (availableCars.length == 0) {
+    List<Car> availableCars = carService.getAvailableCars(getAllBookings());
+    if (availableCars.isEmpty()) {
       throw new BookingStateException("All cars are booked");
     }
 
-    // Now check to see if car already booked
+    // Now, check to see if car already booked
     var isAvailable = false;
     for (Car car : availableCars) {
       if (car.getId().equals(UUID.fromString(carId))) {
         isAvailable = true;
+        break;
       }
     }
     if (!isAvailable) {
@@ -41,136 +46,72 @@ public class BookingService {
     }
 
     // Car can now be booked
-    var carBooking = createCarBooking(userId, carId, bookingLength);
+    var carBooking = createCarBooking(userId, carId, bookingDuration);
     bookingDao.saveBooking(carBooking);
     return carBooking.getId();
   }
 
   public void deleteCarBooking(String bookingId) {
-
-    Booking[] allBookings = bookingDao.getBookings();
-
-    if (allBookings.length == 0) {
-      throw new BookingNotFoundException("Booking not found");
+    // Arg validation checks
+    if (bookingId == null) {
+      throw new IllegalArgumentException("Booking Id cannot be null");
     }
+    var bookingToDelete = bookingDao.findBookingById(UUID.fromString(bookingId))
+            .orElseThrow(() -> new BookingNotFoundException("Booking not found"));
 
-    // Determine if there is a booking match
-    var bookingIdFound = false;
-    for (Booking booking : allBookings) {
-      if (booking != null && booking.getId().equals(UUID.fromString(bookingId))) {
-        bookingIdFound = true;
-      }
-    }
-
-    if (!bookingIdFound) {
-      throw new BookingNotFoundException("Booking not found");
-    }
-
-    for (Booking booking : allBookings) {
-      if (booking != null && booking.getId().equals(UUID.fromString(bookingId))) {
-        bookingDao.deleteBooking(booking);
-      }
-    }
+    bookingDao.deleteBooking(bookingToDelete);
   }
 
   public Optional<Booking> getBookingById(UUID bookingId) {
     return bookingDao.findBookingById(bookingId);
   }
 
-  public Booking[] getBookingsByUser(String userId) {
+  public List<Booking> getBookingsByUser(String userId) {
 
-    Booking[] bookings = bookingDao.getBookings();
-
-    var userBookingCount = 0;
-
-    for (Booking booking : bookings) {
-      if (booking != null && booking.getUser().getId().equals(UUID.fromString(userId))) {
-        ++userBookingCount;
-      }
+    if (userId == null) {
+      throw new IllegalArgumentException("User ID cannot be null");
     }
 
-    if (userBookingCount == 0) {
-      return new Booking[0];
-    }
+    List<Booking> allBookings = bookingDao.getBookings();
+    List<Booking> userBookings = new ArrayList<Booking>();
 
-    var i = 0;
-    Booking[] userBookings = new Booking[userBookingCount];
-
-    for (Booking booking : bookings) {
+    for (Booking booking : allBookings) {
       if (booking != null && booking.getUser().getId().equals(UUID.fromString(userId))) {
-        userBookings[i++] = booking;
+        userBookings.add(booking);
       }
     }
     return userBookings;
   }
 
-  public Booking[] getAllBookings() {
-
-    Booking[] bookings = bookingDao.getBookings();
-    // The DAO initially set the array size but is it empty or not?
-
-    var bookingCount = 0;
-
-    for (Booking booking : bookings) {
-      if (booking != null) {
-        bookingCount++;
-      }
-    }
-
-    if (bookingCount == 0) {
-      return new Booking[0];
-    }
-
-    // Reset the booking array size & content
-    var i = 0;
-    Booking[] newBookings = new Booking[bookingCount];
-
-    for (Booking booking : bookings) {
-      if (booking != null) {
-        newBookings[i++] = booking;
-      }
-    }
-    return newBookings;
+  public List<Booking> getAllBookings() {
+    return bookingDao.getBookings();
   }
 
-  private Booking[] getAllElectricBookings() {
-    Booking[] allBookings = getAllBookings();
-    var electricCarBookingCount = 0;
+  private List<Booking> getAllElectricBookings() {
+    List<Booking> allBookings = bookingDao.getBookings();
+    List<Booking> allElectricBookings = new ArrayList<Booking>();
 
     for (Booking booking : allBookings) {
       if (booking.getCar().isElectric()) {
-        electricCarBookingCount++;
-      }
-    }
-
-    if (electricCarBookingCount == 0) {
-      return new Booking[0];
-    }
-
-    Booking[] allElectricBookings = new Booking[electricCarBookingCount];
-    var i = 0;
-
-    for (Booking booking : allBookings) {
-      if (booking.getCar().isElectric()) {
-        allElectricBookings[i++] = booking;
+        allElectricBookings.add(booking);
       }
     }
     return allElectricBookings;
   }
 
-  private Booking createCarBooking(String userId, String carId, Integer bookingLength) {
+  private Booking createCarBooking(String userId, String carId, Integer bookingDuration) {
 
-    User user = userService.getUserById(UUID.fromString(userId))
+    var user = userService.getUserById(UUID.fromString(userId))
             .orElseThrow(() -> new IllegalStateException("User not found"));
-    Car car = carService.getCarById(UUID.fromString(carId))
+    var car = carService.getCarById(UUID.fromString(carId))
             .orElseThrow(() -> new IllegalStateException("Car not found"));
 
     return new Booking(
         user,
         car,
         LocalDate.now(),
-        LocalDate.now().plusDays(bookingLength),
-        car.getRentalPricePerDay().multiply(BigDecimal.valueOf(bookingLength)),
+        LocalDate.now().plusDays(bookingDuration),
+        car.getRentalPricePerDay().multiply(BigDecimal.valueOf(bookingDuration)),
         BookingStatus.ACTIVE);
   }
 }

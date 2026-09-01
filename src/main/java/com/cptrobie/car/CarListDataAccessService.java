@@ -3,10 +3,8 @@ package com.cptrobie.car;
 import java.math.BigDecimal;
 import java.util.*;
 
-import static java.util.stream.Collectors.toList;
-
 public class CarListDataAccessService implements CarDao {
-  private static final List<Car> CARS;
+  protected static  List<Car> CARS;
 
   static {
     CARS = List.of(
@@ -59,7 +57,7 @@ public class CarListDataAccessService implements CarDao {
               Brand.TOYOTA,
               false)
     );
-  };
+  }
 
   @Override
   public List<Car> getAllCars() {
@@ -68,10 +66,10 @@ public class CarListDataAccessService implements CarDao {
 
   @Override
   public List<Car> getAllElectricCars() {
-    List<Car> electricCars = new ArrayList<>();
+    List<Car> electricCars = new ArrayList<Car>();
 
    for (Car car : CARS) {
-      if (car.isElectric()) {
+      if (car != null && car.isElectric()) {
         electricCars.add(car);
       }
     }
@@ -99,10 +97,10 @@ public class CarListDataAccessService implements CarDao {
       return Optional.empty();
     }
 
-    List<Car> carsByBrand = new ArrayList<>();
+    List<Car> carsByBrand = new ArrayList<Car>();
 
     for (Car car : CARS) {
-      if (car.getBrand().equals(brand)) {
+      if (car != null && car.getBrand().equals(brand)) {
         carsByBrand.add(car);
       }
     }

@@ -1,7 +1,5 @@
 package com.cptrobie.booking;
 
-import static com.cptrobie.util.CsvLineCounter.countLines;
-
 import com.cptrobie.car.Brand;
 import com.cptrobie.car.Car;
 import com.cptrobie.user.User;
@@ -10,44 +8,49 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class BookingCsvReader {
 
-  public static Booking[] readBookingsCsvToArray(String filePath) {
-    int lineCount = countLines(filePath);
-    Booking[] array = new Booking[lineCount];
+  public static List<Booking> readBookingsCsvToList(String filePath) {
+    List<Booking> bookings = new ArrayList<Booking>();
 
     try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
       String line;
-      int index = 0;
+      boolean isHeader = true;
 
-      // CSV has a header row
-      br.readLine();
+      while ((line = br.readLine()) != null) {
+        if (isHeader) {
+          isHeader = false; // Skip the header row
+          continue;
+        }
 
-      while ((line = br.readLine()) != null && index < array.length) {
-        String[] parts = line.split(",");
-        UUID bookingId = UUID.fromString(parts[0].trim());
-        User user = new User(UUID.fromString(parts[1].trim()), parts[2].trim());
-        Car car =
-            new Car(
-                UUID.fromString(parts[3].trim()),
-                parts[4].trim(),
-                new BigDecimal(parts[5].trim()),
-                Brand.valueOf(parts[6].trim()),
-                Boolean.parseBoolean(parts[7].trim()));
-        LocalDate startDate = LocalDate.parse(parts[8].trim());
-        LocalDate endDate = LocalDate.parse(parts[9].trim());
-        BigDecimal price = new BigDecimal(parts[10].trim());
-        BookingStatus status = BookingStatus.valueOf(parts[11].trim());
+        String[] data = line.split(",");
 
-        array[index] = new Booking(bookingId, user, car, startDate, endDate, price, status);
-        index++;
+        // Map array positions to object properties
+        Booking booking = new Booking();
+        booking.setId(UUID.fromString(data[0].trim()));
+            User user = new User(UUID.fromString(data[1].trim()), data[2].trim());
+        booking.setUser(user);
+            Car car = new Car();
+            car.setId(UUID.fromString(data[3].trim()));
+            car.setRegNumber(data[4].trim());
+            car.setRentalPricePerDay(new BigDecimal(data[5].trim()));
+            car.setBrand(Brand.valueOf(data[6].trim()));
+            car.setIsElectric(Boolean.parseBoolean(data[7].trim()));
+        booking.setCar(car);
+        booking.setStartDate(LocalDate.parse(data[8].trim()));
+        booking.setEndDate(LocalDate.parse(data[9].trim()));
+        booking.setPrice(new BigDecimal(data[10].trim()));
+        booking.setStatus(BookingStatus.valueOf(data[11].trim()));
+
+        bookings.add(booking);
       }
     } catch (IOException e) {
       System.out.println(e.getMessage());
     }
-
-    return array;
+    return bookings;
   }
 }

@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class UserFileDataAccessService implements UserDao {
+public class UserFileDataAccessService extends UserListDataAccessService implements UserDao {
   private final String filePath;
-  private static List<User> USERS;
+
 
   public UserFileDataAccessService(String filePath) {
     this.filePath = filePath;
@@ -16,21 +16,11 @@ public class UserFileDataAccessService implements UserDao {
 
   @Override
   public List<User> getUsers() {
-    return USERS;
+    return super.getUsers();
   }
 
   @Override
   public Optional<User> findUserById(UUID userId) {
-
-    if (userId == null) {
-      return Optional.empty();
-    }
-
-    for (User user : USERS) {
-      if (user != null && user.getId().equals(userId)) {
-        return Optional.of(user);
-      }
-    }
-    return Optional.empty();
+    return super.findUserById(userId);
   }
 }

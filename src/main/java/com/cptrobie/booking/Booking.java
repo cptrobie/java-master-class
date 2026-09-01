@@ -9,14 +9,16 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class Booking implements Serializable {
+  private UUID id;
+  private User user;
+  private Car car;
+  private LocalDate startDate;
+  private LocalDate endDate;
+  private BigDecimal price;
+  private BookingStatus status;
 
-  private final UUID id;
-  private final User user;
-  private final Car car;
-  private final LocalDate startDate;
-  private final LocalDate endDate;
-  private final BigDecimal price;
-  private final BookingStatus status;
+  public Booking() {
+  }
 
   public Booking(
       User user,
@@ -43,63 +45,78 @@ public class Booking implements Serializable {
     return id;
   }
 
+  public void setId(UUID id) {
+    this.id = id;
+  }
+
   public User getUser() {
     return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
   }
 
   public Car getCar() {
     return car;
   }
 
+  public void setCar(Car car) {
+    this.car = car;
+  }
+
   public LocalDate getStartDate() {
     return startDate;
+  }
+
+  public void setStartDate(LocalDate startDate) {
+    this.startDate = startDate;
   }
 
   public LocalDate getEndDate() {
     return endDate;
   }
 
+  public void setEndDate(LocalDate endDate) {
+    this.endDate = endDate;
+  }
+
   public BigDecimal getPrice() {
     return price;
+  }
+
+  public void setPrice(BigDecimal price) {
+    this.price = price;
   }
 
   public BookingStatus getStatus() {
     return status;
   }
 
+  public void setStatus(BookingStatus status) {
+    this.status = status;
+  }
+
   public String serializeCarBooking() {
-    return id
-        + ", "
-        + user.serializeUser()
-        + ", "
-        + car.serializeCar()
-        + ", "
-        + startDate
-        + ", "
-        + endDate
-        + ", "
-        + price
-        + ", "
+    return id + ", "
+        + user.serializeUser() + ", "
+        + car.serializeCar() + ", "
+        + startDate + ", "
+        + endDate + ", "
+        + price + ", "
         + status;
   }
 
   @Override
   public String toString() {
     return "CarBooking{"
-        + " id="
-        + id
-        + ", user="
-        + user
-        + ", car="
-        + car
-        + ", startDate="
-        + startDate
-        + ", endDate="
-        + endDate
-        + ", price="
-        + price
-        + ", status="
-        + status
+        + " id=" + id
+        + ", user=" + user
+        + ", car=" + car
+        + ", startDate=" + startDate
+        + ", endDate=" + endDate
+        + ", price=" + price
+        + ", status=" + status
         + " }";
   }
 

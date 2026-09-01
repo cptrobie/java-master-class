@@ -28,7 +28,6 @@ public class CarService {
     for(Booking booking : allBookings) {
       if(booking != null) {
         availableCars.remove(booking.getCar());
-        break;
       }
     }
 
@@ -49,7 +48,6 @@ public class CarService {
     for (Booking booking : electricBookings) {
       if (booking != null) {
         allElectricCars.remove(booking.getCar());
-        break;
       }
     }
     return allElectricCars;

@@ -2,9 +2,9 @@ package com.cptrobie.car;
 
 import java.util.*;
 
-public class CarFileDataAccessService implements CarDao {
+public class CarFileDataAccessService extends CarListDataAccessService implements CarDao {
   private final String filePath;
-  private static List<Car> CARS;
+
 
   public CarFileDataAccessService(String filePath) {
     this.filePath = filePath;
@@ -13,49 +13,21 @@ public class CarFileDataAccessService implements CarDao {
 
   @Override
   public List<Car> getAllCars() {
-    return CARS;
+    return super.getAllCars();
   }
 
   @Override
   public List<Car> getAllElectricCars() {
-    List<Car> electricCars = new ArrayList<>();
-
-    for (Car car : CARS) {
-      if (car.isElectric()) {
-        electricCars.add(car);
-      }
-    }
-    return electricCars;
+    return super.getAllElectricCars();
   }
 
   @Override
   public Optional<Car> findCarById(UUID carId) {
-
-    if (carId == null) {
-      return Optional.empty();
-    }
-
-    for (Car car : CARS) {
-      if (car != null && car.getId().equals(carId)) {
-        return Optional.of(car);
-      }
-    }
-    return Optional.empty();
+    return super.findCarById(carId);
   }
 
   @Override
   public Optional<List<Car>> findCarsByBrand(Brand brand) {
-    if (brand == null) {
-      return Optional.empty();
-    }
-
-    List<Car> carsByBrand = new ArrayList<>();
-
-    for (Car car : CARS) {
-      if (car.getBrand().equals(brand)) {
-        carsByBrand.add(car);
-      }
-    }
-    return Optional.of(carsByBrand);
+    return super.findCarsByBrand(brand);
   }
 }
